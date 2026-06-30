@@ -27,7 +27,25 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(func=lambda message: True)
 def translate(message):
-    bot.reply_to(message, "테스트 성공")
+    try:
+        text = message.text
+
+        # 한국어 → 베트남어
+        if any("가" <= ch <= "힣" for ch in text):
+            target = "vi"
+        else:
+            target = "ko"
+
+        result = GoogleTranslator(
+            source="auto",
+            target=target
+        ).translate(text)
+
+        bot.reply_to(message, result)
+
+    except Exception as e:
+        print(e)
+        bot.reply_to(message, "번역 오류")
 
 threading.Thread(
     target=flask_run,
