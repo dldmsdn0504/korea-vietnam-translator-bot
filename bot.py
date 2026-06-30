@@ -1,43 +1,49 @@
 import os
-import telebot
 import threading
+import telebot
 from flask import Flask
 from deep_translator import GoogleTranslator
-
-TOKEN = os.getenv("TOKEN")
-
-bot = telebot.TeleBot(TOKEN)
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "bot is running"
+    return "OK"
 
 
-def run():
+def flask_run():
     app.run(
         host="0.0.0.0",
-        port=int(os.getenv("PORT", 10000))
+        port=int(os.environ.get("PORT", 10000))
     )
+
+
+TOKEN = os.environ.get("TOKEN")
+
+bot = telebot.TeleBot(TOKEN)
 
 
 @bot.message_handler(func=lambda message: True)
 def translate(message):
     try:
-        text = message.text
-
         result = GoogleTranslator(
             source="auto",
             target="vi"
-        ).translate(text)
+        ).translate(message.text)
 
         bot.reply_to(message, result)
 
-    except:
+    except Exception as e:
         bot.reply_to(message, "번역 오류")
 
 
-threading.Thread(target=run).start()
+threading.Thread(
+    target=flask_run,
+    daemon=True
+).start()
+
+
+print("BOT START")
 
 bot.infinity_polling()
+
