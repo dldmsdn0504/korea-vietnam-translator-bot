@@ -4,7 +4,9 @@ import telebot
 from flask import Flask
 from deep_translator import GoogleTranslator
 
+
 app = Flask(__name__)
+
 
 @app.route("/")
 def home():
@@ -26,19 +28,28 @@ bot = telebot.TeleBot(TOKEN)
 @bot.message_handler(func=lambda message: True)
 def translate(message):
     try:
-        if "가" <= message.text <= "힣":
-    target = "vi"
-else:
-    target = "ko"
+        text = message.text
 
-result = GoogleTranslator(
-    source="auto",
-    target=target
-).translate(message.text)
+        # 한국어 → 베트남어
+        if any("가" <= ch <= "힣" for ch in text):
+            target = "vi"
+
+        # 베트남어 포함 외국어 → 한국어
+        else:
+            target = "ko"
+
+
+        result = GoogleTranslator(
+            source="auto",
+            target=target
+        ).translate(text)
+
 
         bot.reply_to(message, result)
 
+
     except Exception as e:
+        print(e)
         bot.reply_to(message, "번역 오류")
 
 
