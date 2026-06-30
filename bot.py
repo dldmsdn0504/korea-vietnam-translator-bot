@@ -1,7 +1,8 @@
+import os
 import telebot
 from deep_translator import GoogleTranslator
 
-TOKEN = "여기에_새_토큰_입력"
+TOKEN = os.getenv("TOKEN")
 
 bot = telebot.TeleBot(TOKEN)
 
