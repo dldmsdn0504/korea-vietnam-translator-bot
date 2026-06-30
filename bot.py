@@ -32,7 +32,7 @@ def translate(message):
 
         # 한국어 → 베트남어
         if any("가" <= ch <= "힣" for ch in text):
-                target = "vi"
+          target = "vi"
 
         # 베트남어 포함 외국어 → 한국어
         else:
