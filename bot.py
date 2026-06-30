@@ -26,10 +26,15 @@ bot = telebot.TeleBot(TOKEN)
 @bot.message_handler(func=lambda message: True)
 def translate(message):
     try:
-        result = GoogleTranslator(
-            source="auto",
-            target="vi"
-        ).translate(message.text)
+        if "가" <= message.text <= "힣":
+    target = "vi"
+else:
+    target = "ko"
+
+result = GoogleTranslator(
+    source="auto",
+    target=target
+).translate(message.text)
 
         bot.reply_to(message, result)
 
